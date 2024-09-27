@@ -27,8 +27,6 @@ Continue to add screenshots and steps as you go.-->
 ### Building a Diagram
 
 When building a network it is always a good practice to start by building a network diagram. Having a network diagram will allow you to have a reference point for any information you might need down the line, such as IP addressing. After having your diagram setup, I would suggest having at least the hostnames, IP addresses, and domain name added into the diagram. For my diagram I used [draw.io](https://app.diagrams.net/)
-
-
 ![Network Diagram](https://github.com/user-attachments/assets/eccbcc19-c740-420c-9ef7-854d76430ad3)
 
 *Ref 1: My Network Diagram*
@@ -45,7 +43,6 @@ Here are links to the official websites to download their products:
 - [Oracle VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 
 *Do keep note that your computer will need to have the ability to run virtualized OS instances. One way to check is to go open 'Task Manager' and navigate to the 'Performance' tab. If your computer supports virtualization then the 'CPU' section will have a line that says 'Virtualization' and it will either say 'Enabled' or 'Disabled' (in which case you would go to the BIOS to enable it); if you do not see the 'Virtualization' line then your computer does not support virtualization.*
-
 ![Checking Virtualization Support](https://github.com/user-attachments/assets/07cfe741-2879-4ccd-bbe5-b016cef3fc48)
 
 *Ref 2: Checking for virtualization support in Windows 11*
@@ -61,15 +58,41 @@ Here is a list of the hardware settings I allocated to each VM:
 - **Kali Linux** - 2048 MB Memory | 1 CPU | 50 GB VHD
 
 ### Installing Windows / Windows Server 2022 / Ubuntu Server / Kali Linux
-
 <!-- Add Windows installation (brief description preferred), maybe include Windows server installation here too. Screenshot? Doesn't seem justifiable as it is really easy but something to think about still. -->
 <!-- I actually immediatley changed it after to having a section where all of them are installed. This way if anyone wants to skip the installation section they can easily do so. -->
+<!-- Fork[?] (is this the term?) these installation steps onto another file. This is to reduce image bloat here and keep the focus on the Active Directory portion.-->
+<!-- Solution thought up! Add a brief explanation here and then link to a page in where you provide more detailed instructions! Genius! -->
+<!-- Make sure to include somewhere within there on how to setup the NAT Network. Specifically, set it up for use within our lab 
+     Don't forget to include how to setup each machine's IP address to correspond to our diagram! ! ! -->
 
-### Implementing Splunk & Sysmon
+### Implementing Splunk
 <!-- Where do you get splunk? Sysmon? Olaf hartong mention as well. Verify splunk connectivity by reaching it by it's IP address:Port. Image with splunk landing page would be great. -->
+<!-- Currently, I'm thinking about removing the Cyber Sec stuff to focus on AD for now. As a result, this will stay empty for now. -->
+
+On the host machine (not the VMs) go to [splunk.com](https://www.splunk.com) and sign up for an account to log in. Once logged in, go under the tab labeled 'Products' and select 'Free Trials & Downloads'. A page will load with different products. The one we are interested in right now is 'Splunk Enterprise' so click on the 'Get My Free Trial' button below it. When presented with the download page, make sure to click on the 'Linux' tab and download the '.deb' file by selecting the 'Download Now' option beside it. Save the file to the directory of your choice; I saved it to a folder dedicated to this project.
+
+For the next step, some additional add-ons will be needed on the Ubuntu Server for VirtualBox. In the Ubuntu Server, type `sudo apt-get install virtualbox-guest-additions-iso` and press enter. Type 'y' for yes and press enter. This will take some time to complete. You may be asked to select or confirm the restarting of some services in which you can just press enter. Once you see that some services have restarted you'll know that the process has finished.
+
+Go to the menu options at the top of the VirtualBox window and select 'Devices' > 'Shared Folders' > 'Shared Folders Settings'. Add a new folder by selecting the icon of a folder with a plus sign, located on the right side. For the 'Folder Path' select the directory in where you stored the Splunk installer. For example, if I stored my Splunk installer under "D:\Active-Directory-Project" then I would choose this location as the folder path. A 'Folder Name' should automatically fill in when a path is selected, which is fine. Make sure to fill the three options labeled: 'Read-only', 'Auto-mount', and 'Make Permanent'. Click 'Ok'. Back on the VM type `sudo reboot` to reboot the machine.
+
+When prompted, type in the username and password. Now we want to add our user to the vboxsf group. To do this type `sudo adduser username vboxsf` (replace 'username' with the username you use to login!) and press enter. Type in your password to proceed. A message might appear with the message "The group 'vboxsf' does not exist". In that case we will need additional guest installations that VirtualBox offers thaht we did not install yet. Type `sudo apt-get install virtualbox-guest-utils` and hit enter. Type `sudo reboot` to reboot the system. Once logged in you should able to add the user to the vboxsf group using the steps mentioned previously.
+
+Next, we'll create a folder named 'share'. To do this we'll type `mkdir share` and press enter. You can verify the creation of this directory by entering the `ls` command. Now we will mount or shared folder onto the directory named 'share'. We'll do this by entering the command `sudo mount -t vboxsf -o uid=1000,gid=1000 sharefoldername share/` (replace 'sharefoldername' with the name of *your* shared folder name). For example, if my share folder name is 'Active-Directory-Project' then I would enter the command `sudo mount -t vboxsf -o uid=1000,gid=1000 Active-Directory-Project share/`. We can verify the success of our command by entering `ls -la` and seeing our 'share' folder highlighted. Note that if an error appears after entering the command to mount our shared folder then you may need to exit the session using `exit` and log back in to have the previous changes we made to take effect.
+
+We can now change directories into our 'share' folder. To do this input the command `cd share/`. Inputting the `ls -la` command will list any files stored in this directory, including our Splunk installer. To install Splunk, input `sudo dpkg -i splunk`, hit tab (to autofill the rest of the filename), and then press enter. The process of installing Splunk will begin automatically; we will verify completion upon seeing the word 'complete' displayed on-screen.
+
+To start Splunk we will change directories to where Splunk is located using the `cd /opt/splunk` command. If we use the `ls -la` command we will notice all of the user and group belong to 'splunk'. This limits the permissions to that of the user (splunk); if it was set to root then it would run under root privileges would be a security concern as it does not need that many privleges. Let's continue under the user 'splunk'. To do this we will enter the command `sudo -u splunk bash` which will let us act as the user 'splunk'.
+
+As the 'splunk' user we'll go to the bin directory using `cd bin` and then input the `./splunk start` command which will run the installer. A terms and agreement page will appear; scroll through the agreement and type 'y' for yes to accept. Next type and administrator username that you will use to log into Splunk and create a corresponding password. We can verify completion upon the installer telling us where the Splunk web interface is located. The location will be at the server's IP address using port 8000.
+
+The final thing we want is for Splunk to automatically run every time we turn on this machine. First, exit out of the 'splunk' user by using `exit` and then change directories to 'bin' using `cd bin`. We will type `sudo ./splunk enable boot-start -user splunk` and press enter to send the command. This makes it so that Splunk will run under the user 'splunk' any time that the system reboots.
+
+### Implementing Sysmon
+<!-- added due to the length of the previous section; too big if I add splunk+sysmon steps together -->
 
 ### Enabling Active Directory Domain Services (AD DS)
 <!-- How to enable it? Show an image of where it is. Feel free to add more images here for AD setup experience. Include the restarting and end with promoting it to a domain controller. -->
+Steps to enable and set up as a domain controller
 
 ### Creating a Domain + Joining a Domain
 <!-- Self-explanatory. Don't forget to include how to create users and mentioning the different things you can do here. Feel free to be as in-depth as possible! End with how to verify the joining of a domain (although the login screen is a verification already, lol)-->
