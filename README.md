@@ -132,9 +132,16 @@ Moving on, the 'Users' folder will contain a list of users, along with additiona
 
 I'm going to create a new user for our IT department by right-clicking a blank area within our IT OU and navigating to 'New' > 'User'. I will give the user a first name of "Jenny" and a last name of "Smith"; the user logon name will be "jsmith". Having a user logon naming convention of "[first name initial]+[last name]" is standard for many enterprises. I will create a password for this user on the next page. Notice the option that says 'User must change password at next logon'. For our lab environment, we can disable this option; however, keep in mind that it is best practice to always have this enabled in a real-world scenario. I'll proceed to the next screen and verify the information before selecting 'Finish'. I now have a user inside of 'IT' named Jenny Smith. I will be creating additional users and OUs for additional departments; use the previous steps to create as many as you wish.
 
-
 ### Joining a Domain
 <!-- felt better to separate this to keep a more organized layout? Depending on how long this section is I may reorganize the AD portion later. As always, just writing current thoughts for future reference. -->
+
+To join a domain, log on to the Windows 10 machine. Once logged in, go to 'Settings' > 'About' > 'Advanced System Settings' > 'Computer Name' and, under the 'Domain:' field, insert your domain; for my domain, I entered "KOTONE.LOCAL". A prompt asking for user credentials of a user authorized to add computers to a domain will appear. After credentials are verified, the computer should then restart and apply the changes upon rebooting.
+
+If an error appears claiming that the AD DC for the domain cannot be contacted make sure the spelling of your domain is correct. If spelling is not the issue then the issue lies in the target machine not being able to resolve the domain. This is due to the way of how DNS works and we can fix this by going to the network adapter settings and, under the IPv4 properties, manually inputting the IP address of the AD DC (192.168.10.7) in the DNS field. The computer should now be able to properly join the domain.
+
+I'm going to sign into the "Jenny Smith" account after the Windows 10 machine finishes rebooting. On the logon screen, by selecting 'Other User', you will notice that you will be signing into your domain. I will now provide the credentials for the "Jenny Smith" account and the system will accept it, meaning that our Active Directory environment is a huge success. 
+
+
 
 <!-- ### Preparing for Telemetry 
 (WIP name. As we move forward with the project remember to update this. The main appeal to me of this project is the Active Directory portion.)
