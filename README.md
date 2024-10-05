@@ -1,8 +1,10 @@
-# Active Directory
+# Active Directory (In-Progress)
 
 ## Objective
 
 The project aims to explore Active Directory functionality, learn how to ingest events to a SIEM and simulate attack scenarios to develop detection and response capabilities. This hands-on experience was designed to deepen my understanding of setting up a domain environment and monitoring capabilities to help protect it.
+
+*Note: This project is currently in progress. Everything outlined is what I aim to learn upon completion. Currently, I have setup Active Directory and am playing around with it.* [October 2024]
 
 ### Skills Learned
 
@@ -19,11 +21,7 @@ The project aims to explore Active Directory functionality, learn how to ingest 
 - Atomic Red Team
 
 ## Steps
-<!-- drag & drop screenshots here or use imgur and reference them using imgsrc
 
-Every screenshot should have some text explaining what the screenshot is about.
-
-Continue to add screenshots and steps as you go.-->
 ### Building a Diagram
 
 When building a network it is always a good practice to start by building a network diagram. Having a network diagram will allow you to have a reference point for any information you might need down the line, such as IP addressing. After having your diagram setup, I would suggest having at least the hostnames, IP addresses, and domain name added into the diagram. For my diagram I used [draw.io](https://app.diagrams.net/)
