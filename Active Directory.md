@@ -10,7 +10,7 @@ The purpose of this page is to showcase my skills in Active Directory. I will de
 - OUs
     - What are they?
     - Common use cases
-- [Users](https://github.com/HolyYewfelle/Active-Directory-Project/edit/main/Active%20Directory.md#users)
+- [Users](https://github.com/HolyYewfelle/Active-Directory-Project/blob/main/Active%20Directory.md#users)
     - Creating, deleting, and disabling a user
     - Deleting vs. disabling
     - User permissions
