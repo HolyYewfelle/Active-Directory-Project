@@ -6,9 +6,9 @@ The purpose of this page is to showcase my skills in Active Directory. I will de
 
 ## Table of Contents
 <!-- - Installing Active Directory -->
-- Active Directory Users and Computers
+- [Active Directory Users and Computers](https://github.com/HolyYewfelle/Active-Directory-Project/blob/main/Active%20Directory.md#active-directory-users-and-computers)
     - The toolbar 
-- OUs
+- [OUs](https://github.com/HolyYewfelle/Active-Directory-Project/blob/main/Active%20Directory.md#ous)
     - What are they?
     - Common use cases
 - [Users](https://github.com/HolyYewfelle/Active-Directory-Project/blob/main/Active%20Directory.md#users)
